@@ -1,0 +1,36 @@
+/*******************************************************************
+# RESET
+*******************************************************************/
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+  list-style-type: none;
+  text-decoration: none;
+
+  /* FONT */
+  font-family: "Roboto", sans-serif;
+}
+
+button {
+  all: unset;
+}
+
+a:-webkit-any-link {
+  color: var(--color-primary);
+}
+
+
+
+/*******************************************************************
+# DEBUG
+*******************************************************************/
+
+.debug {
+  padding: 1rem;
+  background-color: beije;
+  border: 1px dashed blue;
+}
