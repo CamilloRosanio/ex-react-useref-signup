@@ -19,6 +19,15 @@ a:-webkit-any-link {
   color: var(--color-primary);
 }
 
+#scrolltop-arrow {
+  background-color: blue;
+  color: white;
+  padding: 1rem;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
 
 
 /*******************************************************************
