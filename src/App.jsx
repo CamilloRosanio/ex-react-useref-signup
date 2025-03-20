@@ -1,17 +1,45 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
 
-
+const letters = "abcdefghijklmnopqrstuvwxyz";
+const numbers = "0123456789";
+const symbols = `"!@#$%^&*()-_=+[]{}|;:'\\",.<>?/~"`;
 
 function App() {
 
   // REACT CONTROLLED FIELDS
   // Viene definito campo controllato un qualunque input che si basa su uno USE-STATE.
-  const [fullName, setFullName] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [specialization, setSpecialization] = useState('');
-  const [experienceYears, setExperienceYears] = useState('');
-  const [description, setDescription] = useState('');
+  // Per testarlo senza compilare sempre da zero, posso dare dei valori iniziali agli USE-STATE.
+  const [fullName, setFullName] = useState('Camillo');
+  const [username, setUsername] = useState('millerson');
+  const [password, setPassword] = useState('abc1[]password');
+  const [specialization, setSpecialization] = useState('Full stack');
+  const [experienceYears, setExperienceYears] = useState(4);
+  const [description, setDescription] = useState('Questa è la mia descrizione e sono uno studente del corso di Boolean. Aggiungo altri caratteri per ottenere il numero minimo di caratteri per la validazione del field.');
+
+  const isUsernameValid = useMemo(() => {
+    // NOTA: al posto di SPLIT posso usare l'operatore SPREAD per ottenere comunque l'array dei caratteri di una stringa. Adesempio [...username].
+    const charsValid = username.split('').every(char =>
+      letters.includes(char.toLowerCase()) ||
+      numbers.includes(char.toLowerCase())
+    );
+    return charsValid && username.length >= 6;
+  }, [username]);
+
+  const isPasswordValid = useMemo(() => {
+    return (
+      password.trim().length >= 8 &&
+      password.split('').some(char => letters.includes(char)) &&
+      password.split('').some(char => numbers.includes(char)) &&
+      password.split('').some(char => symbols.includes(char))
+    );
+  }, [password]);
+
+  const isDescriptionValid = useMemo(() => {
+    return (
+      description.trim().length >= 100 &&
+      description.trim().length <= 1000
+    );
+  }, [description]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,10 +48,13 @@ function App() {
       !fullName.trim() ||
       !username.trim() ||
       !password.trim() ||
-      !specializatio.trim() ||
-      !experienceYears.trim() ||
+      !specialization.trim() ||
+      !experienceYears ||
       experienceYears <= 0 ||
-      !description.trim()
+      !description.trim() ||
+      !isUsernameValid ||
+      !isPasswordValid ||
+      !isDescriptionValid
     ) {
       alert('Errore nella compilazione del form');
       return;
@@ -35,8 +66,8 @@ function App() {
       specialization,
       experienceYears,
       description,
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -60,6 +91,13 @@ function App() {
               value={username}
               onChange={e => setUsername(e.target.value)}
             />
+            {username.trim() && (
+              <p
+                style={{ color: isUsernameValid ? 'green' : 'red' }}
+              >
+                {isUsernameValid ? 'Username valido' : 'Deve rispettare X criteri'}
+              </p>
+            )}
           </label>
           <label>
             <p>Password</p>
@@ -68,6 +106,13 @@ function App() {
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
+            {password.trim() && (
+              <p
+                style={{ color: isPasswordValid ? 'green' : 'red' }}
+              >
+                {isPasswordValid ? 'Password valida' : 'Deve rispettare X criteri'}
+              </p>
+            )}
           </label>
           <label>
             <p>Specialization</p>
@@ -94,6 +139,13 @@ function App() {
               value={description}
               onChange={e => setDescription(e.target.value)}
             />
+            {description.trim() && (
+              <p
+                style={{ color: isDescriptionValid ? 'green' : 'red' }}
+              >
+                {isDescriptionValid ? 'Descrizione valida' : 'Deve rispettare X criteri'}
+              </p>
+            )}
           </label>
           <button type='submit'>Submit</button>
         </form>
